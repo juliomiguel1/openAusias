@@ -69,9 +69,9 @@ public class ConnectionClassHelper {
         if (ConnectionClassHelper.getOpenShift()) {
             //return System.getenv("OPENSHIFT_MYSQL_DB_PORT");
             //return System.getenv("OPENSHIFT_DIY_PORT");
-            return "3306";
+            return "3307";
         } else {
-            return "3306";
+            return "3307";
         }
     }
 
