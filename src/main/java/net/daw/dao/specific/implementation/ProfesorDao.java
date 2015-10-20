@@ -37,6 +37,7 @@ import net.daw.dao.generic.implementation.TableDaoGenImpl;
 import net.daw.data.specific.implementation.MysqlDataSpImpl;
 import net.daw.helper.statics.AppConfigurationHelper;
 import net.daw.helper.statics.FilterBeanHelper;
+import net.daw.helper.statics.SqlBuilder;
 
 /**
  *
@@ -73,7 +74,8 @@ public class ProfesorDao extends TableDaoGenImpl<ProfesorBean> {
         MysqlDataSpImpl oMysql = new MysqlDataSpImpl(oConnection);
 
         ArrayList<ProfesorBean> alProfesorBean = new ArrayList<>();
-
+        strSqlSelectDataOrigin += SqlBuilder.buildSqlWhere(alFilter);
+        strSqlSelectDataOrigin += SqlBuilder.buildSqlOrder(hmOrder);
         try {
             ResultSet result = oMysql.getAllSql(strSqlSelectDataOrigin);
             if (result != null) {
@@ -97,7 +99,7 @@ public class ProfesorDao extends TableDaoGenImpl<ProfesorBean> {
     public int getCount(ArrayList<FilterBeanHelper> alFilter) throws Exception {
 
         MysqlDataSpImpl oMysql = new MysqlDataSpImpl(oConnection);
-
+        strSqlSelectDataOrigin += SqlBuilder.buildSqlWhere(alFilter);
         int cont = 0;
 
         try {
@@ -114,7 +116,7 @@ public class ProfesorDao extends TableDaoGenImpl<ProfesorBean> {
     public int getPages(int intRegsPerPag, ArrayList<FilterBeanHelper> alFilter) throws Exception{
         
          MysqlDataSpImpl oMysql = new MysqlDataSpImpl(oConnection);
-
+          strSqlSelectDataOrigin += SqlBuilder.buildSqlWhere(alFilter);
         int cont = 0;
         
         try {
@@ -132,7 +134,8 @@ public class ProfesorDao extends TableDaoGenImpl<ProfesorBean> {
     public ArrayList<ProfesorBean> getPage(int intRegsPerPag, int intPage, ArrayList<FilterBeanHelper> alFilter, HashMap<String, String> hmOrder) throws Exception {
         
         MysqlDataSpImpl oMysql = new MysqlDataSpImpl(oConnection);
-        
+         strSqlSelectDataOrigin += SqlBuilder.buildSqlWhere(alFilter);
+         strSqlSelectDataOrigin += SqlBuilder.buildSqlOrder(hmOrder);
         ArrayList<ProfesorBean> alProfesorBean = new ArrayList<>();
         try {
         ResultSet result = oMysql.getPage(strSqlSelectDataOrigin, intRegsPerPag, intPage);
