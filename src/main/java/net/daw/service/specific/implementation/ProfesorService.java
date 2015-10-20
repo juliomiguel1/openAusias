@@ -170,8 +170,11 @@ public class ProfesorService extends TableServiceGenImpl {
         ProfesorDao oProfesorDao = new ProfesorDao(oConnection);
         ProfesorBean oProfesorBean = new ProfesorBean();  
         String json = ParameterCook.prepareJson(oRequest);
-        Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy").create();   
-        oProfesorBean = gson.fromJson(json, oProfesorBean.getClass());
+        Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy").excludeFieldsWithoutExposeAnnotation().create();
+        /*oProfesorBean.setId(2);
+        oProfesorBean.setNombre("julio");
+        oProfesorBean.setEstado("the best");*/
+        oProfesorBean = gson.fromJson(json, ProfesorBean.class);
         oProfesorBean = oProfesorDao.set(oProfesorBean);
         Map<String, String> data = new HashMap<>();
         data.put("status", "200");
