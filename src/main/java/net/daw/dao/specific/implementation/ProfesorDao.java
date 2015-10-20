@@ -42,63 +42,115 @@ import net.daw.helper.statics.FilterBeanHelper;
  *
  * @author a020864288e
  */
-public class ProfesorDao extends TableDaoGenImpl<ProfesorBean>  {
+public class ProfesorDao extends TableDaoGenImpl<ProfesorBean> {
 
     public ProfesorDao(Connection pooledConnection) throws Exception {
         super(pooledConnection);
     }
-  
-  
-  public ProfesorBean get(ProfesorBean oProfesorBean, Integer expand) throws Exception {
-      MysqlDataSpImpl oMysql = new MysqlDataSpImpl(oConnection);
-            if(oProfesorBean.getId()>0){
-                
-               if(oMysql.existsOne(strSqlSelectDataOrigin, oProfesorBean.getId())){
-                   oProfesorBean.setNombre(oMysql.getOne(strSqlSelectDataOrigin, "nombre", oProfesorBean.getId()));
-                   oProfesorBean.setEstado(oMysql.getOne(strSqlSelectDataOrigin, "estado", oProfesorBean.getId()));
-               }                
-            }      
-      try {
-            
+
+
+    @Override
+    public ProfesorBean get(ProfesorBean oProfesorBean, Integer expand) throws Exception {
+        MysqlDataSpImpl oMysql = new MysqlDataSpImpl(oConnection);
+        if (oProfesorBean.getId() > 0) {
+
+            if (oMysql.existsOne(strSqlSelectDataOrigin, oProfesorBean.getId())) {
+                oProfesorBean.setNombre(oMysql.getOne(strSqlSelectDataOrigin, "nombre", oProfesorBean.getId()));
+                oProfesorBean.setEstado(oMysql.getOne(strSqlSelectDataOrigin, "estado", oProfesorBean.getId()));
+            }
+        }
+        try {
+
             return oProfesorBean;
         } catch (Exception e) {
             throw new Exception(this.getClass().getName() + ":get ERROR: " + e.getMessage());
         }
     }
-  
-   @Override
-  public ArrayList<ProfesorBean> getAll(ArrayList<FilterBeanHelper> alFilter, HashMap<String, String> hmOrder) throws Exception{
-        
-      MysqlDataSpImpl oMysql = new MysqlDataSpImpl(oConnection);
-      ArrayList<ProfesorBean> alProfesorBean = new ArrayList<>();
-     
-      try{
-          ResultSet result = oMysql.getAllSql(strSqlSelectDataOrigin);
-          if(result!= null){
-            while (result.next()) {
-                   ProfesorBean oProfesorBean = new ProfesorBean();
 
-                   oProfesorBean.setId(result.getInt("id"));
-                   oProfesorBean.setNombre(result.getString("nombre"));
-                   oProfesorBean.setEstado(result.getString("estado"));
-                   alProfesorBean.add(oProfesorBean);
-            }
-          }
-          
-      } catch (Exception ex) {
-           throw new Exception(this.getClass().getName() + ":get ERROR: " + ex.getMessage());
-        }
-     
-         
-     return alProfesorBean;
-  }
-  
     @Override
-  public int getCount(ArrayList<FilterBeanHelper> alFilter) throws Exception{
-  
-      MysqlDataSpImpl oMysql = new MysqlDataSpImpl(oConnection);
-      
-      int numero = oMysql.getCount(strSqlSelectDataOrigin);
-      return numero;
-  }
+    public ArrayList<ProfesorBean> getAll(ArrayList<FilterBeanHelper> alFilter, HashMap<String, String> hmOrder) throws Exception {
+
+        MysqlDataSpImpl oMysql = new MysqlDataSpImpl(oConnection);
+
+        ArrayList<ProfesorBean> alProfesorBean = new ArrayList<>();
+
+        try {
+            ResultSet result = oMysql.getAllSql(strSqlSelectDataOrigin);
+            if (result != null) {
+                while (result.next()) {
+                    ProfesorBean oProfesorBean = new ProfesorBean();
+                    oProfesorBean.setId(result.getInt("id"));
+                    oProfesorBean.setNombre(result.getString("nombre"));
+                    oProfesorBean.setEstado(result.getString("estado"));
+                    alProfesorBean.add(oProfesorBean);
+                }
+            }
+
+        } catch (Exception ex) {
+            throw new Exception(this.getClass().getName() + ":get ERROR: " + ex.getMessage());
+        }
+
+        return alProfesorBean;
+    }
+
+    @Override
+    public int getCount(ArrayList<FilterBeanHelper> alFilter) throws Exception {
+
+        MysqlDataSpImpl oMysql = new MysqlDataSpImpl(oConnection);
+
+        int cont = 0;
+
+        try {
+            cont = oMysql.getCount(strSqlSelectDataOrigin);
+
+        } catch (Exception e) {
+            throw new Exception(this.getClass().getName() + ".getCount: Error: " + e.getMessage());
+        }
+
+        return cont;
+    }
+    
+    @Override
+    public int getPages(int intRegsPerPag, ArrayList<FilterBeanHelper> alFilter) throws Exception{
+        
+         MysqlDataSpImpl oMysql = new MysqlDataSpImpl(oConnection);
+
+        int cont = 0;
+        
+        try {
+            cont = oMysql.getPages(strSqlSelectDataOrigin, intRegsPerPag);
+
+        } catch (Exception e) {
+            throw new Exception(this.getClass().getName() + ".getCount: Error: " + e.getMessage());
+        }
+        
+        
+        return cont;
+    }
+    
+    @Override
+    public ArrayList<ProfesorBean> getPage(int intRegsPerPag, int intPage, ArrayList<FilterBeanHelper> alFilter, HashMap<String, String> hmOrder) throws Exception {
+        
+        MysqlDataSpImpl oMysql = new MysqlDataSpImpl(oConnection);
+        
+        ArrayList<ProfesorBean> alProfesorBean = new ArrayList<>();
+        try {
+        ResultSet result = oMysql.getPage(strSqlSelectDataOrigin, intRegsPerPag, intPage);
+        
+        while (result.next()) {
+                    ProfesorBean oProfesorBean = new ProfesorBean();
+                    oProfesorBean.setId(result.getInt("id"));
+                    oProfesorBean.setNombre(result.getString("nombre"));
+                    oProfesorBean.setEstado(result.getString("estado"));
+                    alProfesorBean.add(oProfesorBean);
+                }
+         } catch (Exception e) {
+            throw new Exception(this.getClass().getName() + ".getCount: Error: " + e.getMessage());
+        }
+        
+    return alProfesorBean;
+    }
 }
+    
+
+  

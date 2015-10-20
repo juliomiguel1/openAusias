@@ -30,14 +30,12 @@ package net.daw.service.specific.implementation;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.ArrayList;
 import javax.servlet.http.HttpServletRequest;
 import net.daw.bean.specific.implementation.ProfesorBean;
 import net.daw.connection.implementation.BoneConnectionPoolImpl;
+import net.daw.dao.specific.implementation.ProfesorDao;
+import net.daw.helper.statics.FilterBeanHelper;
 import net.daw.helper.statics.ParameterCook;
 import net.daw.service.generic.implementation.TableServiceGenImpl;
 
@@ -47,12 +45,98 @@ import net.daw.service.generic.implementation.TableServiceGenImpl;
  */
 public class ProfesorService extends TableServiceGenImpl {
 
-    
     public ProfesorService(HttpServletRequest request) {
         super(request);
     }
-    
-    
-    
-    
+
+    @Override
+    public String get() throws Exception {
+
+        int id = ParameterCook.prepareId(oRequest);
+
+        Connection oConnection = new BoneConnectionPoolImpl().newConnection();
+
+        ProfesorDao oProfesorDao = new ProfesorDao(oConnection);
+
+        ProfesorBean oProfesorBean = new ProfesorBean();
+        oProfesorBean.setId(id);
+
+        oProfesorBean = oProfesorDao.get(oProfesorBean, 1);
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.setDateFormat("dd/MM/yyyy");
+        Gson gson = gsonBuilder.create();
+        String data = gson.toJson(oProfesorBean);
+
+        return data;
+    }
+
+    @Override
+    public String getcount() throws Exception {
+
+        Connection oConnection = new BoneConnectionPoolImpl().newConnection();
+
+        ProfesorDao oProfesorDao = new ProfesorDao(oConnection);
+
+        ProfesorBean oProfesorBean = new ProfesorBean();
+
+        //  ArrayList<FilterBeanHelper> alFilter = new ArrayList<FilterBeanHelper>();
+        int conta = oProfesorDao.getCount(null/*alFilter*/);
+
+        String data = "{\"data\":\"" + Integer.toString(conta) + "\"}";
+
+        return data;
+    }
+
+    @Override
+    public String getall() throws Exception {
+
+        Connection oConnection = new BoneConnectionPoolImpl().newConnection();
+
+        ProfesorDao oProfesorDao = new ProfesorDao(oConnection);
+        ArrayList<ProfesorBean> alProfesorBean = new ArrayList<ProfesorBean>();
+
+        alProfesorBean = oProfesorDao.getAll(null, null);
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.setDateFormat("dd/MM/yyyy");
+        Gson gson = gsonBuilder.create();
+        String data = gson.toJson(alProfesorBean);
+
+        return data;
+    }
+
+    public String getpages() throws Exception {
+
+        Connection oConnection = new BoneConnectionPoolImpl().newConnection();
+
+        ProfesorDao oProfesorDao = new ProfesorDao(oConnection);
+        int intRegsPerPag = ParameterCook.prepareRpp(oRequest);
+        int cont = oProfesorDao.getPages(intRegsPerPag, null);
+
+        String data = "{\"data\":\"" + Integer.toString(cont) + "\"}";
+
+        return data;
+    }
+
+    public String getpage() throws Exception {
+
+        Connection oConnection = new BoneConnectionPoolImpl().newConnection();
+
+        ProfesorDao oProfesorDao = new ProfesorDao(oConnection);
+
+        ArrayList<ProfesorBean> alProfesorBean = new ArrayList<ProfesorBean>();
+
+        int intRegsPerPag = ParameterCook.prepareRpp(oRequest);
+        int intPage = ParameterCook.preparePage(oRequest);
+
+        alProfesorBean = oProfesorDao.getPage(intRegsPerPag, intPage, null, null);
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.setDateFormat("dd/MM/yyyy");
+        Gson gson = gsonBuilder.create();
+        String data = gson.toJson(alProfesorBean);
+
+        return data;
+    }
+
+    /* 
+     */
 }
