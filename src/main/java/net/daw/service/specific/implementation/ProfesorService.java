@@ -31,6 +31,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.HashMap;
 import javax.servlet.http.HttpServletRequest;
 import net.daw.bean.specific.implementation.ProfesorBean;
 import net.daw.connection.implementation.BoneConnectionPoolImpl;
@@ -78,9 +79,9 @@ public class ProfesorService extends TableServiceGenImpl {
         ProfesorDao oProfesorDao = new ProfesorDao(oConnection);
 
         ProfesorBean oProfesorBean = new ProfesorBean();
-
+         ArrayList<FilterBeanHelper> alFilterBeanHelper = ParameterCook.prepareFilter(oRequest);
         //  ArrayList<FilterBeanHelper> alFilter = new ArrayList<FilterBeanHelper>();
-        int conta = oProfesorDao.getCount(null/*alFilter*/);
+        int conta = oProfesorDao.getCount(alFilterBeanHelper/*alFilter*/);
 
         String data = "{\"data\":\"" + Integer.toString(conta) + "\"}";
 
@@ -94,8 +95,10 @@ public class ProfesorService extends TableServiceGenImpl {
 
         ProfesorDao oProfesorDao = new ProfesorDao(oConnection);
         ArrayList<ProfesorBean> alProfesorBean = new ArrayList<ProfesorBean>();
-
-        alProfesorBean = oProfesorDao.getAll(null, null);
+        ArrayList<FilterBeanHelper> alFilterBeanHelper = ParameterCook.prepareFilter(oRequest);
+        HashMap<String, String> hmOrder = ParameterCook.prepareOrder(oRequest);
+        
+        alProfesorBean = oProfesorDao.getAll(alFilterBeanHelper, hmOrder);
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.setDateFormat("dd/MM/yyyy");
         Gson gson = gsonBuilder.create();
@@ -110,8 +113,10 @@ public class ProfesorService extends TableServiceGenImpl {
 
         ProfesorDao oProfesorDao = new ProfesorDao(oConnection);
         int intRegsPerPag = ParameterCook.prepareRpp(oRequest);
-        int cont = oProfesorDao.getPages(intRegsPerPag, null);
-
+        ArrayList<FilterBeanHelper> alFilterBeanHelper = ParameterCook.prepareFilter(oRequest);
+        int cont = oProfesorDao.getPages(intRegsPerPag, alFilterBeanHelper);
+        
+        
         String data = "{\"data\":\"" + Integer.toString(cont) + "\"}";
 
         return data;
@@ -127,8 +132,9 @@ public class ProfesorService extends TableServiceGenImpl {
 
         int intRegsPerPag = ParameterCook.prepareRpp(oRequest);
         int intPage = ParameterCook.preparePage(oRequest);
-
-        alProfesorBean = oProfesorDao.getPage(intRegsPerPag, intPage, null, null);
+        ArrayList<FilterBeanHelper> alFilterBeanHelper = ParameterCook.prepareFilter(oRequest);
+        HashMap<String, String> hmOrder = ParameterCook.prepareOrder(oRequest);
+        alProfesorBean = oProfesorDao.getPage(intRegsPerPag, intPage, alFilterBeanHelper, hmOrder);
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.setDateFormat("dd/MM/yyyy");
         Gson gson = gsonBuilder.create();
@@ -140,3 +146,4 @@ public class ProfesorService extends TableServiceGenImpl {
     /* 
      */
 }
+
