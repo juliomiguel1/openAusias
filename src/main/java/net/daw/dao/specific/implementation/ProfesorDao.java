@@ -123,7 +123,7 @@ public class ProfesorDao extends TableDaoGenImpl<ProfesorBean> {
             cont = oMysql.getPages(strSqlSelectDataOrigin, intRegsPerPag);
 
         } catch (Exception e) {
-            throw new Exception(this.getClass().getName() + ".getCount: Error: " + e.getMessage());
+            throw new Exception(this.getClass().getName() + ".getPages: Error: " + e.getMessage());
         }
         
         
@@ -148,10 +148,38 @@ public class ProfesorDao extends TableDaoGenImpl<ProfesorBean> {
                     alProfesorBean.add(oProfesorBean);
                 }
          } catch (Exception e) {
-            throw new Exception(this.getClass().getName() + ".getCount: Error: " + e.getMessage());
+            throw new Exception(this.getClass().getName() + ".getPage: Error: " + e.getMessage());
         }
         
     return alProfesorBean;
+    }
+    
+    
+    @Override
+    public int remove(ProfesorBean oProfesorBean) throws Exception{
+        
+      int result = 0;
+        try {
+            result = oMysql.removeOne(result, strTableOrigin);
+        } catch (Exception e) {
+            throw new Exception(this.getClass().getName() + ".remove: Error: " + e.getMessage());
+        }
+        return result;
+    }
+    
+    @Override
+    public ProfesorBean set(ProfesorBean oProfesorBean) throws Exception{
+    
+    try {
+            if (oProfesorBean.getId() == 0) {
+                oProfesorBean.setId(oMysql.insertOne(strTableOrigin));
+            }
+            oMysql.updateOne(oProfesorBean.getId(),strTableOrigin, "nombre", oProfesorBean.getNombre());
+            oMysql.updateOne(oProfesorBean.getId(),strTableOrigin, "estado", oProfesorBean.getEstado());
+        } catch (Exception e) {
+            throw new Exception(this.getClass().getName() + ".set: Error: " + e.getMessage());
+        }
+        return oProfesorBean;
     }
 }
     

@@ -32,6 +32,7 @@ import com.google.gson.GsonBuilder;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import net.daw.bean.specific.implementation.ProfesorBean;
 import net.daw.connection.implementation.BoneConnectionPoolImpl;
@@ -143,7 +144,39 @@ public class ProfesorService extends TableServiceGenImpl {
         return data;
     }
 
-    /* 
-     */
+    @Override
+    public String remove() throws Exception{
+        
+        Connection oConnection = new BoneConnectionPoolImpl().newConnection();
+        int id = ParameterCook.prepareId(oRequest);
+        ProfesorDao oProfesorDao = new ProfesorDao(oConnection);
+        
+        ProfesorBean oProfesorBean = new ProfesorBean();
+        oProfesorBean.setId(id);
+        oProfesorDao.remove(oProfesorBean);
+        
+        Map<String, String> data = new HashMap<>();
+        data.put("status", "200");
+        data.put("message", "se ha eliminado el registro con id=" + oProfesorBean.getId());
+        Gson gson = new Gson();
+        String resultado = gson.toJson(data);
+        return resultado;
+    }
+    
+    @Override
+    public String set() throws Exception{
+        
+        Connection oConnection = new BoneConnectionPoolImpl().newConnection();
+        ProfesorDao oProfesorDao = new ProfesorDao(oConnection);
+        ProfesorBean oProfesorBean = new ProfesorBean();        
+        oProfesorBean = oProfesorDao.set(oProfesorBean);
+        
+        Map<String, String> data = new HashMap<>();
+        data.put("status", "200");
+        data.put("message", Integer.toString(oProfesorBean.getId()));
+        Gson gson = new Gson();
+        String resultado = gson.toJson(data);
+        return resultado;
+    }
 }
 
