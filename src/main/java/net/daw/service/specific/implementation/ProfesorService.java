@@ -157,7 +157,7 @@ public class ProfesorService extends TableServiceGenImpl {
         
         Map<String, String> data = new HashMap<>();
         data.put("status", "200");
-        data.put("message", "se ha eliminado el registro con id=" + oProfesorBean.getId());
+        data.put("message", "se ha eliminado el registro con id= " + id);
         Gson gson = new Gson();
         String resultado = gson.toJson(data);
         return resultado;

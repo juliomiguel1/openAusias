@@ -39,7 +39,7 @@ import net.daw.helper.statics.MetaEnum;
  * @author a020864288e
  */
 @TableSourceMetaInformation(
-        TableName = "profesores",
+        TableName = "profesor",
         Description = "Estado de Profesores"
 )
 

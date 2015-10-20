@@ -160,7 +160,7 @@ public class ProfesorDao extends TableDaoGenImpl<ProfesorBean> {
         
       int result = 0;
         try {
-            result = oMysql.removeOne(result, strTableOrigin);
+            result = oMysql.removeOne(oProfesorBean.getId(), strTableOrigin);
         } catch (Exception e) {
             throw new Exception(this.getClass().getName() + ".remove: Error: " + e.getMessage());
         }
