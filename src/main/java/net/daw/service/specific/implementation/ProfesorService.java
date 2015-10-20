@@ -168,13 +168,14 @@ public class ProfesorService extends TableServiceGenImpl {
         
         Connection oConnection = new BoneConnectionPoolImpl().newConnection();
         ProfesorDao oProfesorDao = new ProfesorDao(oConnection);
-        ProfesorBean oProfesorBean = new ProfesorBean();        
+        ProfesorBean oProfesorBean = new ProfesorBean();  
+        String json = ParameterCook.prepareJson(oRequest);
+        Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy").create();   
+        oProfesorBean = gson.fromJson(json, oProfesorBean.getClass());
         oProfesorBean = oProfesorDao.set(oProfesorBean);
-        
         Map<String, String> data = new HashMap<>();
         data.put("status", "200");
         data.put("message", Integer.toString(oProfesorBean.getId()));
-        Gson gson = new Gson();
         String resultado = gson.toJson(data);
         return resultado;
     }
