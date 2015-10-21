@@ -26,13 +26,54 @@
  */
 package net.daw.service.specific.implementation;
 
+import java.sql.Connection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import net.daw.service.generic.implementation.TableServiceGenImpl;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import net.daw.bean.specific.implementation.UsuarioBean;
+import net.daw.connection.implementation.BoneConnectionPoolImpl;
+import net.daw.connection.publicinterface.ConnectionInterface;
+import net.daw.dao.specific.implementation.UsuarioDao;
+import net.daw.helper.statics.ParameterCook;
 
 public class UsuarioService extends TableServiceGenImpl {
 
     public UsuarioService(HttpServletRequest request) {
         super(request);
+    }
+
+    public void getFromLogin() {
+
+        String op = ParameterCook.prepareOperation(oRequest);
+        ConnectionInterface DataConnectionSource = null;
+        Connection oConnection = null;
+
+        try {
+
+            if (op.equals("login")) {
+
+                DataConnectionSource = new BoneConnectionPoolImpl();
+
+                oConnection = DataConnectionSource.newConnection();
+
+                UsuarioBean oUsuarioBean = new UsuarioBean();
+                String login = oRequest.getParameter("login");
+                String pass = oRequest.getParameter("password");
+                
+                oUsuarioBean.setLogin(login);
+                oUsuarioBean.setPassword(pass);
+                UsuarioDao oUsuarioDao = new UsuarioDao(oConnection);
+                oUsuarioBean = oUsuarioDao.getFromLogin(oUsuarioBean);
+                
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(UsuarioService.class.getName()).log(Level.SEVERE, null, ex);
+
+        }
+        //return null;
+
     }
 
 }
