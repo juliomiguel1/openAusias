@@ -37,7 +37,9 @@ import javax.servlet.http.HttpServletRequest;
 import net.daw.bean.specific.implementation.ProfesorBean;
 import net.daw.connection.implementation.BoneConnectionPoolImpl;
 import net.daw.dao.specific.implementation.ProfesorDao;
+import net.daw.helper.statics.ExceptionBooster;
 import net.daw.helper.statics.FilterBeanHelper;
+import net.daw.helper.statics.JsonMessage;
 import net.daw.helper.statics.ParameterCook;
 import net.daw.service.generic.implementation.TableServiceGenImpl;
 
@@ -49,6 +51,19 @@ public class ProfesorService extends TableServiceGenImpl {
 
     public ProfesorService(HttpServletRequest request) {
         super(request);
+    }
+    
+    
+    @Override
+    public String getmetainformation() throws Exception{
+        
+        Connection oConnection = new BoneConnectionPoolImpl().newConnection();
+
+        ProfesorDao oProfesorDao = new ProfesorDao(oConnection);
+        
+        Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy").excludeFieldsWithoutExposeAnnotation().create();
+        
+        return gson.toJson(oProfesorDao.getmetainformation());
     }
 
     @Override
@@ -157,7 +172,7 @@ public class ProfesorService extends TableServiceGenImpl {
         
         Map<String, String> data = new HashMap<>();
         data.put("status", "200");
-        data.put("message", "se ha eliminado el registro con id= " + id);
+        data.put("message", "se ha eliminado el registro con id= " + ((Integer)id).toString());
         Gson gson = new Gson();
         String resultado = gson.toJson(data);
         return resultado;
@@ -182,5 +197,64 @@ public class ProfesorService extends TableServiceGenImpl {
         String resultado = gson.toJson(data);
         return resultado;
     }
-}
+    
+     @Override
+    public String getaggregateviewone() throws Exception {
+        String data = null;
+        try {
+            String meta = this.getmetainformation();
+            String one = this.get();
+            data = "{"
+                    + "\"meta\":" + meta
+                    + ",\"bean\":" + one
+                    + "}";
+            data = JsonMessage.getJson("200", data);
+            return data;
+        } catch (Exception ex) {
+            ExceptionBooster.boost(new Exception(this.getClass().getName() + ":getAggregateViewOne ERROR: " + ex.getMessage()));
+        }
+        return data;
+    }
 
+    @Override
+    public String getaggregateviewsome() throws Exception {
+        String data = null;
+        try {
+            String meta = this.getmetainformation();
+            String page = this.getpage();
+            String pages = this.getpages();
+            String registers = this.getcount();
+            data = "{"
+                    + "\"meta\":" + meta
+                    + ",\"page\":" + page
+                    + ",\"pages\":" + pages
+                    + ",\"registers\":" + registers
+                    + "}";
+            data = JsonMessage.getJson("200", data);
+        } catch (Exception ex) {
+            ExceptionBooster.boost(new Exception(this.getClass().getName() + ":getAggregateViewSome ERROR: " + ex.getMessage()));
+        }
+        return data;
+    }
+
+    @Override
+    public String getaggregateviewall() throws Exception {
+        String data = null;
+        try {
+            String meta = this.getmetainformation();
+            String all = this.getall();
+            String registers = this.getcount();
+            data = "{"
+                    + "\"meta\":" + meta
+                    + ",\"page\":" + all
+                    + ",\"registers\":" + registers
+                    + "}";
+            data = JsonMessage.getJson("200", data);
+        } catch (Exception ex) {
+            ExceptionBooster.boost(new Exception(this.getClass().getName() + ":getAggregateViewAll ERROR: " + ex.getMessage()));
+        }
+        return data;
+    }
+    
+  
+}

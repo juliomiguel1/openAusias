@@ -32,6 +32,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import net.daw.bean.meta.MetaBeanGenImpl;
 import net.daw.bean.specific.implementation.ProfesorBean;
 import net.daw.dao.generic.implementation.TableDaoGenImpl;
 import net.daw.data.specific.implementation.MysqlDataSpImpl;
@@ -48,7 +49,6 @@ public class ProfesorDao extends TableDaoGenImpl<ProfesorBean> {
     public ProfesorDao(Connection pooledConnection) throws Exception {
         super(pooledConnection);
     }
-
 
     @Override
     public ProfesorBean get(ProfesorBean oProfesorBean, Integer expand) throws Exception {
@@ -111,54 +111,52 @@ public class ProfesorDao extends TableDaoGenImpl<ProfesorBean> {
 
         return cont;
     }
-    
+
     @Override
-    public int getPages(int intRegsPerPag, ArrayList<FilterBeanHelper> alFilter) throws Exception{
-        
-         MysqlDataSpImpl oMysql = new MysqlDataSpImpl(oConnection);
-          strSqlSelectDataOrigin += SqlBuilder.buildSqlWhere(alFilter);
+    public int getPages(int intRegsPerPag, ArrayList<FilterBeanHelper> alFilter) throws Exception {
+
+        MysqlDataSpImpl oMysql = new MysqlDataSpImpl(oConnection);
+        strSqlSelectDataOrigin += SqlBuilder.buildSqlWhere(alFilter);
         int cont = 0;
-        
+
         try {
             cont = oMysql.getPages(strSqlSelectDataOrigin, intRegsPerPag);
 
         } catch (Exception e) {
             throw new Exception(this.getClass().getName() + ".getPages: Error: " + e.getMessage());
         }
-        
-        
+
         return cont;
     }
-    
+
     @Override
     public ArrayList<ProfesorBean> getPage(int intRegsPerPag, int intPage, ArrayList<FilterBeanHelper> alFilter, HashMap<String, String> hmOrder) throws Exception {
-        
+
         MysqlDataSpImpl oMysql = new MysqlDataSpImpl(oConnection);
-         strSqlSelectDataOrigin += SqlBuilder.buildSqlWhere(alFilter);
-         strSqlSelectDataOrigin += SqlBuilder.buildSqlOrder(hmOrder);
+        strSqlSelectDataOrigin += SqlBuilder.buildSqlWhere(alFilter);
+        strSqlSelectDataOrigin += SqlBuilder.buildSqlOrder(hmOrder);
         ArrayList<ProfesorBean> alProfesorBean = new ArrayList<>();
         try {
-        ResultSet result = oMysql.getPage(strSqlSelectDataOrigin, intRegsPerPag, intPage);
-        
-        while (result.next()) {
-                    ProfesorBean oProfesorBean = new ProfesorBean();
-                    oProfesorBean.setId(result.getInt("id"));
-                    oProfesorBean.setNombre(result.getString("nombre"));
-                    oProfesorBean.setEstado(result.getString("estado"));
-                    alProfesorBean.add(oProfesorBean);
-                }
-         } catch (Exception e) {
+            ResultSet result = oMysql.getPage(strSqlSelectDataOrigin, intRegsPerPag, intPage);
+
+            while (result.next()) {
+                ProfesorBean oProfesorBean = new ProfesorBean();
+                oProfesorBean.setId(result.getInt("id"));
+                oProfesorBean.setNombre(result.getString("nombre"));
+                oProfesorBean.setEstado(result.getString("estado"));
+                alProfesorBean.add(oProfesorBean);
+            }
+        } catch (Exception e) {
             throw new Exception(this.getClass().getName() + ".getPage: Error: " + e.getMessage());
         }
-        
-    return alProfesorBean;
+
+        return alProfesorBean;
     }
-    
-    
+
     @Override
-    public int remove(ProfesorBean oProfesorBean) throws Exception{
-        
-      int result = 0;
+    public int remove(ProfesorBean oProfesorBean) throws Exception {
+
+        int result = 0;
         try {
             result = oMysql.removeOne(oProfesorBean.getId(), strTableOrigin);
         } catch (Exception e) {
@@ -166,22 +164,31 @@ public class ProfesorDao extends TableDaoGenImpl<ProfesorBean> {
         }
         return result;
     }
-    
+
     @Override
-    public ProfesorBean set(ProfesorBean oProfesorBean) throws Exception{
-    
-    try {
+    public ProfesorBean set(ProfesorBean oProfesorBean) throws Exception {
+
+        try {
             if (oProfesorBean.getId() == 0) {
                 oProfesorBean.setId(oMysql.insertOne(strTableOrigin));
-            }
-            oMysql.updateOne(oProfesorBean.getId(),strTableOrigin, "nombre", oProfesorBean.getNombre());
-            oMysql.updateOne(oProfesorBean.getId(),strTableOrigin, "estado", oProfesorBean.getEstado());
+            } 
+                oMysql.updateOne(oProfesorBean.getId(), strTableOrigin, "nombre", oProfesorBean.getNombre());
+                oMysql.updateOne(oProfesorBean.getId(), strTableOrigin, "estado", oProfesorBean.getEstado());
+            
         } catch (Exception e) {
             throw new Exception(this.getClass().getName() + ".set: Error: " + e.getMessage());
         }
         return oProfesorBean;
     }
-}
     
-
-  
+   /* @Override
+     public ArrayList<MetaBeanGenImpl> getmetainformation() throws Exception{
+         ProfesorBean oProfesorBean = null;
+         ArrayList<MetaBeanGenImpl> alVector = null;
+         try{
+             Class oProfesorBeanClass = ProfesorBean.class;
+             alVector = new ArrayList<>()
+         }
+         return alVector;
+     }*/
+}
