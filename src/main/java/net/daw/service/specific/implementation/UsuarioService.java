@@ -67,7 +67,13 @@ public class UsuarioService extends TableServiceGenImpl {
                 UsuarioDao oUsuarioDao = new UsuarioDao(oConnection);
                 oUsuarioBean = oUsuarioDao.getFromLogin(oUsuarioBean);
                 
-            }
+                if (oUsuarioBean.getId() != 0) {
+                                    //oUsuario = oUsuarioDao.type(oUsuario); //fill user level -> pending
+                                    oRequest.getSession().setAttribute("userBean", oUsuarioBean);                
+                }
+            }else if(op.equals("logout")){
+                oRequest.getSession().invalidate();
+        }
         } catch (Exception ex) {
             Logger.getLogger(UsuarioService.class.getName()).log(Level.SEVERE, null, ex);
 

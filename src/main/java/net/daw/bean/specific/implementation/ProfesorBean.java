@@ -75,7 +75,16 @@ public class ProfesorBean extends BeanGenImpl implements BeanInterface {
             DefaultValue = ""
     )
     private String estado;
-
+    
+    @Expose
+    @MethodMetaInformation(
+            UltraShortName = "Fec.",
+            ShortName = "Fecha.",
+            Description = "Fecha",
+            Type = MetaEnum.FieldType.Date,
+            DefaultValue = ""
+    )
+    private String fecha;
     /**
      * @return the id
      */
@@ -116,5 +125,19 @@ public class ProfesorBean extends BeanGenImpl implements BeanInterface {
      */
     public void setEstado(String estado) {
         this.estado = estado;
+    }
+
+    /**
+     * @return the fecha
+     */
+    public String getFecha() {
+        return fecha;
+    }
+
+    /**
+     * @param fecha the fecha to set
+     */
+    public void setFecha(String fecha) {
+        this.fecha = fecha;
     }
 }

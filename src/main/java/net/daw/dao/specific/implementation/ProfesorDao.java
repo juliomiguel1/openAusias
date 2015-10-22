@@ -58,6 +58,7 @@ public class ProfesorDao extends TableDaoGenImpl<ProfesorBean> {
             if (oMysql.existsOne(strSqlSelectDataOrigin, oProfesorBean.getId())) {
                 oProfesorBean.setNombre(oMysql.getOne(strSqlSelectDataOrigin, "nombre", oProfesorBean.getId()));
                 oProfesorBean.setEstado(oMysql.getOne(strSqlSelectDataOrigin, "estado", oProfesorBean.getId()));
+                oProfesorBean.setFecha(oMysql.getOne(strSqlSelectDataOrigin, "fecha", oProfesorBean.getId()));
             }
         }
         try {
@@ -84,6 +85,7 @@ public class ProfesorDao extends TableDaoGenImpl<ProfesorBean> {
                     oProfesorBean.setId(result.getInt("id"));
                     oProfesorBean.setNombre(result.getString("nombre"));
                     oProfesorBean.setEstado(result.getString("estado"));
+                    oProfesorBean.setFecha(result.getString("fecha"));
                     alProfesorBean.add(oProfesorBean);
                 }
             }
@@ -144,6 +146,7 @@ public class ProfesorDao extends TableDaoGenImpl<ProfesorBean> {
                 oProfesorBean.setId(result.getInt("id"));
                 oProfesorBean.setNombre(result.getString("nombre"));
                 oProfesorBean.setEstado(result.getString("estado"));
+                oProfesorBean.setFecha(result.getString("fecha"));
                 alProfesorBean.add(oProfesorBean);
             }
         } catch (Exception e) {
@@ -174,6 +177,7 @@ public class ProfesorDao extends TableDaoGenImpl<ProfesorBean> {
             } 
                 oMysql.updateOne(oProfesorBean.getId(), strTableOrigin, "nombre", oProfesorBean.getNombre());
                 oMysql.updateOne(oProfesorBean.getId(), strTableOrigin, "estado", oProfesorBean.getEstado());
+                oMysql.updateOne(oProfesorBean.getId(), strTableOrigin, "fecha", oProfesorBean.getFecha());
             
         } catch (Exception e) {
             throw new Exception(this.getClass().getName() + ".set: Error: " + e.getMessage());
