@@ -35,6 +35,7 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import net.daw.bean.specific.implementation.ProfesorBean;
+import net.daw.bean.specific.implementation.UsuarioBean;
 import net.daw.connection.implementation.BoneConnectionPoolImpl;
 import net.daw.dao.specific.implementation.ProfesorDao;
 import net.daw.helper.statics.ExceptionBooster;
@@ -256,5 +257,29 @@ public class ProfesorService extends TableServiceGenImpl {
         return data;
     }
     
-  
+   @Override
+   public Boolean checkpermission(String strMethodName) throws Exception {
+       UsuarioBean oUserBean = (UsuarioBean) oRequest.getSession().getAttribute("userBean");
+       Boolean bReturn = false;
+       if (oUserBean != null) {
+           if (oUserBean.getId_tipousuario() == 1) {
+               bReturn = true;
+           }
+           if (oUserBean.getId_tipousuario() == 2) {
+               switch (strMethodName) {
+                   case "getmetainformation":
+                   case "get":
+                   case "getall":
+                   case "getpage":
+                   case "getpages":
+                   case "getcount":
+                       bReturn = true;
+                       break;
+               }
+           }           
+       }
+       return bReturn;
+   }
+
 }
+

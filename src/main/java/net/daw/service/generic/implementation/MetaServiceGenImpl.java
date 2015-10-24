@@ -33,6 +33,7 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import javax.servlet.http.HttpServletRequest;
 import net.daw.bean.meta.MetaBeanGenImpl;
+import net.daw.bean.specific.implementation.UsuarioBean;
 import net.daw.dao.generic.implementation.TableDaoGenImpl;
 import net.daw.helper.statics.ExceptionBooster;
 import net.daw.helper.statics.JsonMessage;
@@ -60,5 +61,13 @@ public abstract class MetaServiceGenImpl implements MetaServiceInterface {
         }
         return data;
     }
-
+     @Override
+    public Boolean checkpermission(String strMethodName) throws Exception {
+        UsuarioBean oUserBean = (UsuarioBean) oRequest.getSession().getAttribute("userBean");
+        if (oUserBean != null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
